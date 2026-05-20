@@ -90,7 +90,3 @@ def load_pdf(NameOfPdf):
 def answer(qustion,chain):
     answer = chain.invoke(qustion)
     return answer
-
-chain = load_pdf('langchain_info.pdf')
-
-print(answer("what is langchain",chain))
