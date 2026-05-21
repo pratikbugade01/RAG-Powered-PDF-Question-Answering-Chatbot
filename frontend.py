@@ -4,13 +4,13 @@ import requests
 # Backend URL
 BASE_URL = "http://127.0.0.1:8000"
 
-st.set_page_config(page_title="Document Based Qustion Answering Chatboat.", layout="centered")
+st.set_page_config(page_title="Document Based Question Answering Chatbot.", layout="centered")
 
 st.title("🎥 Chat With Documents.")
 st.write("Ask questions on your document.")
 
 
-doc = st.file_uploader("enter your file.")
+doc = st.file_uploader("Upload your document")
 typeofdoc = st.selectbox(label="select Document type",options=["PDF","Text","doc"])
 
 if st.button("Load Document"):
