@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import uuid
 
 # Backend URL
 BASE_URL = "http://127.0.0.1:8000"
@@ -12,6 +13,9 @@ st.write("Ask questions on your document.")
 # Initialize chat history
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
+
+if "session_id" not in st.session_state:
+    st.session_state["session_id"] = str(uuid.uuid4())
 
 doc = st.file_uploader("Upload your document",type=["PDF"],max_upload_size=20)
 
@@ -27,7 +31,8 @@ if st.button("Load Document"):
                 f"{BASE_URL}/upload-pdf",
                 files={
                     "file":doc
-                }
+                },
+                data={"session_id": st.session_state["session_id"]}
             )
 
             data = response.json()
@@ -59,7 +64,10 @@ if st.session_state.get("loaded", False):
                 try:                                    
                     response = requests.post(
                         f"{BASE_URL}/ask",
-                        json={"question": question}
+                        json={
+                            "session_id": st.session_state["session_id"],
+                            "question": question,
+                        }
                     )
                     answer = response.json()["answer"]
 
