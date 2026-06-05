@@ -41,7 +41,7 @@ def create_retriever(chunks):
     retriever = vector_store.as_retriever(
         search_type="mmr",
         search_kwargs={
-            "k": 5,           
+            "k": 6,           
             "fetch_k": 15,     
             "lambda_mult": 0.7  
             }
@@ -59,13 +59,13 @@ def initialize_llm():
 def create_prompt():
     prompt = PromptTemplate(
         template="""
-        You are a helpful assistant that answers STRICTLY from the provided context.
-        Be thorough and include ALL relevant details from the context.
+        You are a helpful assistant.
+        Answer ONLY from the provided transcript context.
         If the context is insufficient, just say you don't know.
 
         {context}
         Question: {question}
-        Answer in a clear, structured and detailed manner:
+        
         """,
         input_variables = ['context', 'question']
     )
