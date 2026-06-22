@@ -3,7 +3,7 @@ import requests
 import uuid
 
 # Backend URL
-BASE_URL = "http://13.50.231.216:8000"
+BASE_URL = "http://localhost:8000"
 
 st.set_page_config(page_title="Document Based Question Answering Chatbot.", layout="centered")
 

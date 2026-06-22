@@ -1,7 +1,7 @@
 from fastapi import FastAPI, File, UploadFile, Request, Form
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
-from rag import load_pdf, answer
+from backend.rag import load_pdf, answer
+from backend.schemas import AskRequest
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -16,11 +16,6 @@ app = FastAPI()
 app.state.limiter = limiter
 chains: Dict[str, object] = {}
 chains_lock = Lock()
-
-
-class AskRequest(BaseModel):
-    session_id: str
-    question: str
 
 
 @app.exception_handler(RateLimitExceeded)
@@ -40,14 +35,14 @@ def health():
 
 @app.post("/upload-pdf")
 @limiter.limit("5/minute")
-async def upload_pdf(request: Request, session_id: str = Form(...), file: UploadFile = File(...)):
+def upload_pdf(request: Request, session_id: str = Form(...), file: UploadFile = File(...)):
     if not session_id:
         return {"success": False, "message": "Session ID is required."}
 
     if not file.filename.endswith(".pdf"):
         return {"success": False, "message": "Only PDF files are allowed!"}
     
-    contents = await file.read()
+    contents = file.file.read()
 
     if len(contents) > MAX_FILE_SIZE:
         return {"success": False, "message": "File too large. Maximum size is 20MB."}

@@ -1,6 +1,6 @@
 # 📄 RAG-Powered PDF Question Answering Chatbot
 
-A production-ready **Retrieval-Augmented Generation (RAG)** chatbot that lets you upload any PDF and ask questions about it. Built with LangChain, FAISS, and Llama 3.3 70B, deployed on AWS EC2 with Docker.
+A production-ready **Retrieval-Augmented Generation (RAG)** chatbot that lets you upload any PDF and ask questions about it. Built with LangChain, LangSmith tracing, FAISS, and Llama 3.3 70B, deployed on AWS EC2 with Docker.
 
 ---
 
@@ -43,6 +43,7 @@ A production-ready **Retrieval-Augmented Generation (RAG)** chatbot that lets yo
 - **MMR (Maximal Marginal Relevance)** retrieval for diverse, relevant chunks
 - **Session-based** architecture — multiple users can use it simultaneously
 - **Chat history** — see all previous Q&A in the same session
+- **LangSmith tracing** for observability around PDF loading, chunking, retrieval, and answer generation
 - Rate limiting on all API endpoints (slowapi)
 - Secrets managed via **AWS SSM Parameter Store**
 - Dockerized backend deployed on **AWS EC2**
@@ -62,6 +63,7 @@ A production-ready **Retrieval-Augmented Generation (RAG)** chatbot that lets yo
 | Containerization | Docker |
 | Cloud | AWS EC2 (Ubuntu) |
 | Secrets | AWS SSM Parameter Store |
+| Observability | LangSmith |
 | Evaluation | RAGAS |
 
 ---
@@ -70,14 +72,18 @@ A production-ready **Retrieval-Augmented Generation (RAG)** chatbot that lets yo
 
 ```
 RAG-Powered-PDF-Question-Answering-Chatbot/
-├── rag.py              # RAG pipeline — PDF loading, chunking, retrieval, LLM chain
-├── main.py             # FastAPI backend — upload and ask endpoints
-├── frontend.py         # Streamlit frontend — UI and chat history
+├── backend/
+│   ├── main.py         # FastAPI backend — upload and ask endpoints
+│   ├── rag.py          # RAG pipeline — PDF loading, chunking, retrieval, LLM chain
+│   └── schemas.py      # Request/response models
+├── frontend/
+│   └── frontend.py     # Streamlit frontend — UI and chat history
 ├── Dockerfile          # Docker configuration
-├── requirements.txt    # Python dependencies              
+├── requirements.txt    # Python dependencies
 ├── .gitignore
 ├── .dockerignore
-├── testing.ipynb       # Development and experimentation notebook
+├── notebooks/
+│   └── testing.ipynb   # Development and experimentation notebook
 └── eval/
     ├── evaluate.py         # RAGAS evaluation script (offline, not in production)
     └── ragas_results.csv   # Evaluation results
@@ -138,12 +144,12 @@ echo "GROQ_API_KEY=your_groq_api_key_here" > .env
 
 **5. Run the backend:**
 ```bash
-uvicorn main:app --reload --port 8000
+uvicorn backend.main:app --reload --port 8000
 ```
 
 **6. Run the frontend (new terminal):**
 ```bash
-streamlit run frontend.py
+streamlit run frontend/frontend.py
 ```
 
 ---
@@ -238,6 +244,7 @@ RAG pipeline evaluated using **RAGAS** on a LangChain research paper across 3 qu
 ```
 langchain
 langchain-community
+langsmith
 langchain-huggingface
 langchain-groq
 langchain-core
