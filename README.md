@@ -7,6 +7,7 @@ A production-ready **Retrieval-Augmented Generation (RAG)** chatbot that lets yo
 ## 🚀 Live Demo
 
 - **Frontend:** https://rag-based-pdf-chatboat.streamlit.app/
+- **Frontend:** https://pdf-rag-chatbot.netlify.app/
 - **Backend API:** `http://13.50.231.216:8000`
 - **API Docs:** `http://13.50.231.216:8000/docs`
 
